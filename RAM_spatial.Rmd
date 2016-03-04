@@ -1,0 +1,161 @@
+---
+title: "Spatial distribution of RAM stocks"
+author: "Jamie Afflerbach"
+date: "March 2, 2016"
+output: html_document
+---
+
+(1) Filter AquaMaps species to select for RAM species
+
+```{r, echo=F}
+
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+
+library(data.table)
+library(rgdal)
+library(raster)
+library(dplyr)
+
+```
+
+Get RAM data
+```{r RAM data}
+
+#time series data is from version 3 of the ram database. Select those stocks that have B/Bmsy values
+
+ts = read.csv('RAM/ram_timeseries.csv')%>%
+  filter(tsid=='BdivBmsytouse-dimensionless')
+
+#RAM - OHI database from Kristen B.
+ram = read.csv('RAM/RAM_stocks_ohi_rgns.csv')%>%
+        rename(ohi_rgn = OHI_rgn,
+               species = scientificname)%>%
+        left_join(.,ts,by='stockid')
+
+#list of ram species
+ram_sp=unique(ram$species)
+
+```
+
+There are `r length(ram_sp)` unique scientific names in the RAM database.
+
+```{r read in aquamaps}
+
+am_sp = read.csv('aquamaps/speciesoccursum.csv')%>%
+          mutate(fullname = paste0(genus," ",species))%>%
+            filter(fullname %in% ram_sp)
+am_cells = read.csv('aquamaps/hcaf_truncated.csv')
+# am_sp_cells = fread('J:/aquamaps/v2015/hcaf_sp_native_trunc.csv',stringsAsFactors=F)%>%
+#                 filter(speciesid %in% am_sp$speciesid)%>%
+#                   write.csv(file='aquamaps/am_spp_cells_ram.csv')
+am_sp_cells = read.csv('aquamaps/am_spp_cells_ram.csv')
+
+```
+
+After filtering the aquamaps species, it looks like `r nrow(am_sp)` of the `r length(ram_sp)` RAM species are also in the AquaMaps database.
+
+```{r aquamaps raster}
+
+cells_r = raster('spatial/loiczid_raster.gri')
+
+```
+
+(2) Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
+
+```{r ohi rgns}
+
+eezs_r = raster('spatial/rgn_offshore_gcs.tif')%>%resample(.,cells_r,method='ngb',progress='text')
+
+```
+
+(3) Rasterize each aquamap species, and then run zonal on each and get proportion of cells in each region
+
+```{r}
+
+### Species Map Function ###
+# This function takes a single species scientific name as input, then grabs all occurrence cells and associated probability per cell
+
+sp_map_fun <- function(species){
+  
+  sp = species
+  
+  sp_id  = filter(am_sp,fullname==sp)$speciesid
+  sp_map = filter(am_sp_cells,speciesid==sp_id)%>%
+    merge(am_cells,by='loiczid')
+  
+  return(sp_map)
+}
+
+```
+
+
+```{r}
+
+#initialize empty dataframe
+df = data.frame()
+
+for (i in 1:nrow(am_sp)){
+  
+  print(i)
+  
+  #get species name
+  sp = am_sp[i,]$fullname
+  
+  #get the species map and set as data frame
+  
+  #I added a column 'presence' set to 1 and removed probability. For some species, like Thunnus obesus, there were duplicate
+  # cells with different probabilities which is a problem for the subs() function below... not sure why there are duplicate
+  # cells with different probabilities so this is one way around it. When we care about probability of occurrence, we will need
+  # to find a better way (maybe take the average prob?)
+  map  = sp_map_fun(sp)%>%as.data.frame()%>%
+          mutate(presence = 1)%>%
+          select(loiczid,presence)%>%
+            unique() 
+  
+  #substitute the species range map cells into the loiczid raster 
+  r_sp = subs(cells_r, map[,c('loiczid','presence')], by='loiczid', which='presence', subsWithNA=T)%>%
+            mask(eezs_r) #masking the species map with the eez raster in order to remove those cells that are in the species range
+                         # map but not included as 'ocean' cells in the eez map. This is not an ideal solution but will 
+                         #give a better proportion
+              
+
+  #get the total number of cells of the species range within each OHI region (zone)
+  z = zonal(r_sp,eezs_r,fun='count',na.rm=T)
+  
+  #create the data we want - calculate the proportion of cells in each zone.
+  d = as.data.frame(z)%>%
+          filter(count>0)%>%
+        mutate(species = sp,
+               total_cells = ncell(r_sp) - freq(r_sp,value=NA),
+               prop = count/total_cells)%>%
+          rename(ohi_rgn = zone,
+                 n_cells = count)
+  
+  df = rbind(d,df)
+}
+
+```
+
+
+
+Add Country names to data frame
+
+```{r}
+
+rgns = read.csv('spatial/rgn_details.csv')%>%
+        rename(ohi_rgn = rgn_id)%>%select(ohi_rgn,rgn_typ,rgn_nam)
+
+spatialDF = df%>%
+              left_join(.,rgns,by='ohi_rgn')%>%
+              select(ohi_rgn,species,prop,rgn_typ,rgn_nam)%>%
+            left_join(.,ram,by=c('species','ohi_rgn'))
+
+
+write.csv(spatialDF,'ram_sp_prop_eezs.csv')
+              
+
+```
+
+
+
+
