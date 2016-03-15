@@ -5,26 +5,39 @@ date: "March 2, 2016"
 output: html_document
 ---
 
-(1) Filter AquaMaps species to select for RAM species
+This script uses [AquaMaps](http://www.aquamaps.org/) and the [RAM database](http://ramlegacy.org/) to identify stocks that are shared across multiple EEZs.
 
-```{r, echo=F}
+AquaMaps species range maps are used to spatially identify where stocks held in the RAM database are located. AquaMaps database was queried to select all species that match each stock in the RAM database that has a B/Bmsy value (using the `timeseries` database and filtering on `BdivBmsytouse-dimensionless` as the `tsid`). These species ranges are then split into stock ranges by using Ocean Health Index regions (EEZs and High Seas) that have been identified as covering the stock. This data can be found in `RAM/RAM_stocks_ohi_rgns.csv`.
 
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+
+
+
+###(0) Setup
+```{r,message=F,warning=F}
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 
 library(data.table)
 library(rgdal)
+library(RColorBrewer)
 library(raster)
 library(dplyr)
 
+cols      = rev(colorRampPalette(brewer.pal(11, 'Spectral'))(255)) # rainbow color scheme
+
+dir_N = c('Windows' = '//neptune.nceas.ucsb.edu/data_edit',
+          'Darwin'  = '/Volumes/data_edit',
+          'Linux'   = '/var/data/ohi')[[ Sys.info()[['sysname']] ]]
+
 ```
 
-Get RAM data
+###(2)Get RAM data
 ```{r RAM data}
 
 #time series data is from version 3 of the ram database. Select those stocks that have B/Bmsy values
 
 ts = read.csv('RAM/ram_timeseries.csv')%>%
-  filter(tsid=='BdivBmsytouse-dimensionless')
+  filter(tsid=='BdivBmsytouse-dimensionless') #selecting our assessment measure (B/Bmsy)
 
 #RAM - OHI database from Kristen B.
 ram = read.csv('RAM/RAM_stocks_ohi_rgns.csv')%>%
@@ -39,15 +52,19 @@ ram_sp=unique(ram$species)
 
 There are `r length(ram_sp)` unique scientific names in the RAM database.
 
+###(3) Grab AquaMaps data
+
 ```{r read in aquamaps}
 
 am_sp = read.csv('aquamaps/speciesoccursum.csv')%>%
           mutate(fullname = paste0(genus," ",species))%>%
-            filter(fullname %in% ram_sp)
+            filter(fullname %in% as.character(ram_sp))
 am_cells = read.csv('aquamaps/hcaf_truncated.csv')
-# am_sp_cells = fread('J:/aquamaps/v2015/hcaf_sp_native_trunc.csv',stringsAsFactors=F)%>%
-#                 filter(speciesid %in% am_sp$speciesid)%>%
-#                   write.csv(file='aquamaps/am_spp_cells_ram.csv')
+
+# am_sp_cells = fread(file.path(dir_N, 'git-annex/globalprep/_raw_data/aquamaps/v2015/csv/hcaf_sp_native_trunc.csv'),
+#                     stringsAsFactors=F)%>%
+#                  filter(speciesid %in% am_sp$speciesid)%>%
+#                    write.csv(file='aquamaps/am_spp_cells_ram.csv')
 am_sp_cells = read.csv('aquamaps/am_spp_cells_ram.csv')
 
 ```
@@ -58,17 +75,21 @@ After filtering the aquamaps species, it looks like `r nrow(am_sp)` of the `r le
 
 cells_r = raster('spatial/loiczid_raster.gri')
 
+plot(cells_r,main='Cell IDs for AquaMaps cells',box=F)
+
 ```
 
-(2) Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
+###(4) Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
 
 ```{r ohi rgns}
 
 eezs_r = raster('spatial/rgn_offshore_gcs.tif')%>%resample(.,cells_r,method='ngb',progress='text')
 
+plot(eezs_r,col=cols,main='OHI Regions',box=F,axes=F)
+
 ```
 
-(3) Rasterize each aquamap species, and then run zonal on each and get proportion of cells in each region
+###(5) Rasterize each aquamap species, and then run zonal on each and get proportion of cells in each region
 
 ```{r}
 
@@ -80,7 +101,7 @@ sp_map_fun <- function(species){
   sp = species
   
   sp_id  = filter(am_sp,fullname==sp)$speciesid
-  sp_map = filter(am_sp_cells,speciesid==sp_id)%>%
+  sp_map = filter(am_sp_cells,as.character(speciesid)==as.character(sp_id))%>%
     merge(am_cells,by='loiczid')
   
   return(sp_map)
@@ -88,6 +109,7 @@ sp_map_fun <- function(species){
 
 ```
 
+###(6) Create a database that has information for all RAM stocks including the proportion of species range found in each EEZ.
 
 ```{r}
 
@@ -96,7 +118,7 @@ df = data.frame()
 
 for (i in 1:nrow(am_sp)){
   
-  print(i)
+  #print(i)
   
   #get species name
   sp = am_sp[i,]$fullname
@@ -108,10 +130,10 @@ for (i in 1:nrow(am_sp)){
   # cells with different probabilities so this is one way around it. When we care about probability of occurrence, we will need
   # to find a better way (maybe take the average prob?)
   map  = sp_map_fun(sp)%>%as.data.frame()%>%
-          mutate(presence = 1)%>%
+         mutate(presence = 1)%>%
           select(loiczid,presence)%>%
             unique() 
-  
+
   #substitute the species range map cells into the loiczid raster 
   r_sp = subs(cells_r, map[,c('loiczid','presence')], by='loiczid', which='presence', subsWithNA=T)%>%
             mask(eezs_r) #masking the species map with the eez raster in order to remove those cells that are in the species range
@@ -136,9 +158,7 @@ for (i in 1:nrow(am_sp)){
 
 ```
 
-
-
-Add Country names to data frame
+###(7) Add Country names to data frame
 
 ```{r}
 
@@ -156,6 +176,137 @@ write.csv(spatialDF,'ram_sp_prop_eezs.csv')
 
 ```
 
+***
+
+# Calculating stock proportions per EEZ/High Seas
+
+Now we want to try and separate each species range into stocks. To do this, we are reducing the species range map to only include cells that have a probability of occurrence greater than or equal to **0.8**.
+
+Then using the `RAM_stocks_ohi_rgns.csv' data (database linking all stocks to OHI regions), each species range is split into the number of unique stocks for the species.
+
+(1) Species range is reduced to cells between 0.8 and 1
+(2) All stocks for a given species is identified from the RAM data
+(3) Each stock has a list of unique regions associated with the stock
+(4) These regions are rasterized and then used to mask the species range from step 1 in order to create a **stock range map**
+(5) The total proportion of the **stock range map** found in each EEZ is calculated.
+
+**This is all done in the following for-loop:**
+
+```{r}
+
+out<-data.frame()
+
+for (i in 1:nrow(am_sp)){
+
+#1. select species
+sp = am_sp[i,]$fullname
+
+#2. get map of prob occurrence >=0.8
+
+# for some species, like Thunnus obesus, there are duplicate loiczid reported with different probabilities... there is no
+# obvious way to handle this as we dont know what probability is correct. I am simply taking the biggest...which is why the group_by and summarize
+# are needed here
+map <- sp_map_fun(sp)%>%filter(probability>=0.8)%>%
+        group_by(loiczid)%>%
+        summarize(probability = max(probability))%>%
+        ungroup()%>%
+        as.data.frame()
 
 
+r_sp = subs(cells_r, map[,c('loiczid','probability')], by='loiczid', which='probability', subsWithNA=T)%>%
+            mask(eezs_r)
+
+#3. get unique stocks for the species
+
+sp_stks = ram%>%
+          filter(species==sp,
+                 !is.na(tsvalue),
+                 !is.na(ohi_rgn))%>%
+            select(-tsid,-tsyear,-tsvalue)%>%
+            distinct()
+
+if(nrow(sp_stks)==0) next
+
+#4. overlay eez map on species map and 
+
+uq_stks = unique(sp_stks$stockid)
+
+stk_prop_df = data.frame()
+
+#5. For loop to create distinct stocks per species and calculate proportion
+
+for (j in 1:length(uq_stks)){
+  #print(j)
+  
+  stkid = uq_stks[j]
+  
+  stkrgns = filter(sp_stks,stockid==stkid)%>%
+              select(ohi_rgn)%>%
+                collect()%>%
+                .[['ohi_rgn']]
+  
+  rgn_eez <- eezs_r
+  
+  rgn_eez[!(rgn_eez %in% stkrgns)]<-NA
+  
+  #select only those cod cells that fall in the range of the stock regions
+  
+  stk_map <- mask(r_sp,rgn_eez)
+  
+  
+#5. run zonal stats: get the total number of cells of the species range within each OHI region (zone)
+z = zonal(stk_map,rgn_eez,fun='count',na.rm=T)
+
+d = as.data.frame(z)%>%
+          filter(count>0)%>%
+        mutate(species = sp,
+               total_cells = ncell(stk_map) - freq(stk_map,value=NA),
+               prop = count/total_cells,
+               stockid = stkid)%>%
+          rename(ohi_rgn = zone,
+                 n_cells = count)
+
+#6. Combine all stocks per species into one dataframe
+stk_prop_df = rbind(stk_prop_df,d)
+  
+}
+
+#7. combine all stocks from all species
+out = rbind(out,stk_prop_df)
+
+
+}
+```
+
+Combine stock proportion dataframe with B/Bmsy information from RAM
+```{r}
+
+stk_prop = out%>%
+            left_join(ram,by='stockid')%>%
+              select(ohi_rgn = ohi_rgn.x,
+                     species = species.x,
+                     prop,stockid,commonname,areaid,
+                     stocklong = stocklong.x,OHI_name,FAO,tsyear,tsvalue)
+
+write.csv(stk_prop,file='RAM_stocks_per_ohi_rgn.csv')
+
+#prop_map = subs(eezs_r,d[,c('ohi_rgn','prop')],by='ohi_rgn',which='prop')
+
+```
+
+Get all species that are found in more than 1 EEZ
+```{r}
+d <- stk_prop%>%
+  group_by(stockid,species,commonname,stocklong,areaid)%>%
+  summarize(count = length(unique(ohi_rgn)))%>%
+  filter(count>1)
+```
+
+Looks like there are `r length(unique(stk_prop$species))` that have a B/Bmsy in the RAM database AND have assigned an OHI region. There are just `r nrow(d)` stocks in the RAM database that meet our conditions.
+
+```{r}
+
+knitr::kable(d)
+
+```
 
