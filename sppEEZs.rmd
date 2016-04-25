@@ -1,6 +1,8 @@
 ---
 title: "Transboundary Stocks"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -9,6 +11,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 
 library(data.table)
 library(rgdal)
+library(ggplot2)
 library(RColorBrewer)
 library(raster)
 library(dplyr)
@@ -21,7 +24,7 @@ dir_M = c('Windows' = '//mazu.nceas.ucsb.edu/ohi',
 
 ```
 
-## (1) Get species list
+### Get species list
 
 ```{r sp list}
 
@@ -31,7 +34,7 @@ spp = read.csv('UpsideSpeciesList.csv')%>%
 
 ```
 
-## (2) Grab AquaMaps data
+### Grab AquaMaps data
 
 ```{r read in aquamaps}
 
@@ -56,22 +59,20 @@ After filtering the aquamaps species, it looks like `r nrow(am_sp)` of the `r nr
 
 cells_r = raster('spatial/loiczid_raster.gri')
 
-plot(cells_r,main='Cell IDs for AquaMaps cells',box=F)
-
 ```
 
 
-###(3) Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
+### Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
 
 ```{r ohi rgns}
 
-eezs_r = raster('spatial/rgn_offshore_gcs.tif')%>%resample(.,cells_r,method='ngb',progress='text')
-
+#eezs_r = raster('spatial/rgn_offshore_gcs.tif')%>%resample(.,cells_r,method='ngb',filename='eezs.tif')
+eezs_r  = raster('eezs.tif')
 plot(eezs_r,col=cols,main='OHI Regions',box=F,axes=F)
 
 ```
 
-###(4) Rasterize each aquamap species, and then run zonal on each and get total number of eezs each species has 
+### Rasterize each aquamap species, and then run zonal on each and get total number of eezs each species has 
 
 ```{r}
 
@@ -92,13 +93,15 @@ sp_map_fun <- function(species){
 ```
 
 
+### For loop to get EEZs per species
 
-For each species in am_sp and each probability,
-(1) set threshold
-(2) return all EEZ rgn_ids
+For each species in am_sp and each probability:  
+
+**(1)** set threshold (probability = 0 or 0.5) 
+**(2)** return all EEZ rgn_ids  
 
 
-```{r}
+```{r,eval=F}
 
 probs = c(0,0.5)
 
@@ -127,7 +130,8 @@ for (i in 1:nrow(am_sp)){
           dplyr::select(loiczid,probability)%>%
             group_by(loiczid)%>%
               summarise(probability = min(probability))%>%
-              as.data.frame()
+              as.data.frame()%>%
+            filter(probability>=j)
 
   #substitute the species range map cells into the loiczid raster 
   r_sp = subs(cells_r, map[,c('loiczid','probability')], by='loiczid', which='probability', subsWithNA=T)%>%
@@ -155,15 +159,15 @@ for (i in 1:nrow(am_sp)){
   
 }
 
-#write.csv(df,file='intData/sp_probs_eez-preJoin.csv')
+#write.csv(df,file='intData/sp_probs_eez_int.csv')
 
 ```
 
-###(7) Add Country names to data frame
+### Add Country names to data frame
 
 ```{r}
 
-df = read.csv('intData/sp_probs_eez-preJoin.csv',stringsAsFactors=F)%>%
+df = read.csv('intData/sp_probs_eez_int.csv',stringsAsFactors=F)%>%
         dplyr::select(-X)
 fao_areas = read.csv('fao_areas.csv',stringsAsFactors=F)%>%
             dplyr::select(-X)
@@ -174,10 +178,47 @@ data = df%>%
           rename(FAOarea = num)
 
 
-write.csv(data,'sp_prop_eezs.csv')
+#write.csv(data,'sp_prop_eezs.csv')
               
 
 ```
 
-***
+****
+
+### Exploratory figures
+
+Number of species with multiple EEZs
+
+```{r}
+
+d = data%>%
+    group_by(species,probability)%>%
+  summarise(numEEZs = n())%>%
+      ungroup()%>%
+      as.data.frame()
+
+ggplot(d,aes(numEEZs))+
+  geom_histogram(binwidth=5, colour="black", fill="lightblue",alpha=0.4)+
+  labs(list(x = "Number of EEZs", y = "Number of Species"))
+```
+
+```{r}
+ctry = data%>%
+        filter(probability==0)%>%
+        group_by(rgn_nam)%>%
+  summarise(numSPP = n())%>%
+  ungroup()%>%
+    arrange(desc(numSPP))%>%
+  top_n(10)
+
+ggplot(ctry,aes(x = reorder(rgn_nam, numSPP), y=numSPP))+
+  geom_bar(position="dodge",stat='identity',fill='lightblue',alpha=0.7,colour="black")+
+   theme(axis.text.x=element_text(angle=45,hjust=1))+
+  labs(list(x = "Countries", y = "Number of Species (using 0 probability threshold)"))+
+  coord_flip()
+
+```
+
+
+
 
