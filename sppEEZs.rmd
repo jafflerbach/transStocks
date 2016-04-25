@@ -1,0 +1,183 @@
+---
+title: "Transboundary Stocks"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+
+library(data.table)
+library(rgdal)
+library(RColorBrewer)
+library(raster)
+library(dplyr)
+
+cols      = rev(colorRampPalette(brewer.pal(11, 'Spectral'))(255)) # rainbow color scheme
+
+dir_M = c('Windows' = '//mazu.nceas.ucsb.edu/ohi',
+          'Darwin'  = '/Volumes/ohi',
+          'Linux'   = '/home/shares/ohi')[[ Sys.info()[['sysname']] ]]
+
+```
+
+## (1) Get species list
+
+```{r sp list}
+
+spp = read.csv('UpsideSpeciesList.csv')%>%
+        `colnames<-`(c('x','species'))%>%
+          dplyr::select(species)
+
+```
+
+## (2) Grab AquaMaps data
+
+```{r read in aquamaps}
+
+am_sp = read.csv('aquamaps/speciesoccursum.csv')%>%
+          mutate(fullname = paste0(genus," ",species))%>%
+            filter(fullname %in% spp$species)
+am_cells = read.csv('aquamaps/hcaf_truncated.csv')
+
+# am_sp_cells = fread(file.path(dir_M, 'git-annex/globalprep/_raw_data/aquamaps/d2015/csv/hcaf_sp_native_trunc.csv'),
+#                     stringsAsFactors=F)%>%
+#                   filter(speciesid %in% am_sp$speciesid)%>%
+#                     write.csv(file='aquamaps/am_spp_cells.csv')
+# 
+
+am_sp_cells = read.csv('aquamaps/am_spp_cells.csv')
+
+```
+
+After filtering the aquamaps species, it looks like `r nrow(am_sp)` of the `r nrow(spp)` RAM species are also in the AquaMaps database.
+
+```{r aquamaps raster}
+
+cells_r = raster('spatial/loiczid_raster.gri')
+
+plot(cells_r,main='Cell IDs for AquaMaps cells',box=F)
+
+```
+
+
+###(3) Rasterize EEZs (OHI regions) to the half degree cells, same as aquamaps. With rgn_id as zones
+
+```{r ohi rgns}
+
+eezs_r = raster('spatial/rgn_offshore_gcs.tif')%>%resample(.,cells_r,method='ngb',progress='text')
+
+plot(eezs_r,col=cols,main='OHI Regions',box=F,axes=F)
+
+```
+
+###(4) Rasterize each aquamap species, and then run zonal on each and get total number of eezs each species has 
+
+```{r}
+
+### Species Map Function ###
+# This function takes a single species scientific name as input, then grabs all occurrence cells and associated probability per cell
+
+sp_map_fun <- function(species){
+  
+  sp = species
+  
+  sp_id  = filter(am_sp,fullname==sp)$speciesid
+  sp_map = filter(am_sp_cells,as.character(speciesid)==as.character(sp_id))%>%
+    merge(am_cells,by='loiczid')
+  
+  return(sp_map)
+}
+
+```
+
+
+
+For each species in am_sp and each probability,
+(1) set threshold
+(2) return all EEZ rgn_ids
+
+
+```{r}
+
+probs = c(0,0.5)
+
+#initialize empty dataframe
+df = data.frame()
+
+for (i in 1:nrow(am_sp)){
+    
+  print(i)
+  
+  #get species name
+  sp = am_sp[i,]$fullname
+  
+  sp_prob_df = data.frame()
+  
+  for(j in probs){
+
+  
+  #get the species map and set as data frame
+  
+  #I added a column 'presence' set to 1 and removed probability. For some species, like Thunnus obesus, there were duplicate
+  # cells with different probabilities which is a problem for the subs() function below... not sure why there are duplicate
+  # cells with different probabilities so this is one way around it. When we care about probability of occurrence, we will need
+  # to find a better way (maybe take the average prob?)
+   map  = sp_map_fun(sp)%>%as.data.frame()%>%
+          dplyr::select(loiczid,probability)%>%
+            group_by(loiczid)%>%
+              summarise(probability = min(probability))%>%
+              as.data.frame()
+
+  #substitute the species range map cells into the loiczid raster 
+  r_sp = subs(cells_r, map[,c('loiczid','probability')], by='loiczid', which='probability', subsWithNA=T)%>%
+            mask(eezs_r) #masking the species map with the eez raster in order to remove those cells that are in the species range
+                         # map but not included as 'ocean' cells in the eez map. This is not an ideal solution but will 
+                         #give a better proportion
+  
+  #mask OHI EEZ regions with the species map and get unique values 
+  m = mask(eezs_r,r_sp)%>%
+          unique()
+              
+  
+  #create the data we want - calculate the proportion of cells in each zone.
+  d = as.data.frame(m)%>%
+        rename(ohi_rgn = m)%>%
+        mutate(species = sp)%>%
+        left_join(rgns)%>%
+        mutate(probability = j)
+  
+  sp_prob_df = rbind(d,sp_prob_df)
+  
+  }
+  
+  df = rbind(sp_prob_df,df)
+  
+}
+
+#write.csv(df,file='intData/sp_probs_eez-preJoin.csv')
+
+```
+
+###(7) Add Country names to data frame
+
+```{r}
+
+df = read.csv('intData/sp_probs_eez-preJoin.csv',stringsAsFactors=F)%>%
+        dplyr::select(-X)
+fao_areas = read.csv('fao_areas.csv',stringsAsFactors=F)%>%
+            dplyr::select(-X)
+
+
+data = df%>%
+        left_join(fao_areas, by = c("rgn_nam" = "name"))%>%
+          rename(FAOarea = num)
+
+
+write.csv(data,'sp_prop_eezs.csv')
+              
+
+```
+
+***
+
