@@ -70,6 +70,9 @@ cells_r = raster('spatial/loiczid_raster.gri')
 eezs_r  = raster('eezs.tif')
 plot(eezs_r,col=cols,main='OHI Regions',box=F,axes=F)
 
+rgns = read.csv('spatial/rgn_details.csv')%>%
+        rename(ohi_rgn = rgn_id)%>%select(ohi_rgn,rgn_typ,rgn_nam)
+
 ```
 
 ### Rasterize each aquamap species, and then run zonal on each and get total number of eezs each species has 
@@ -103,7 +106,7 @@ For each species in am_sp and each probability:
 
 ```{r,eval=F}
 
-probs = c(0,0.5)
+probs = c(0.5,0.6,0.7,0.8,0.9,1)
 
 #initialize empty dataframe
 df = data.frame()
@@ -159,7 +162,7 @@ for (i in 1:nrow(am_sp)){
   
 }
 
-#write.csv(df,file='intData/sp_probs_eez_int.csv')
+write.csv(df,file='intData/sp_probs_eez_int.csv')
 
 ```
 
@@ -178,7 +181,7 @@ data = df%>%
           rename(FAOarea = num)
 
 
-#write.csv(data,'sp_prop_eezs.csv')
+write.csv(data,'sp_prop_eezs.csv')
               
 
 ```
@@ -204,7 +207,7 @@ ggplot(d,aes(numEEZs))+
 
 ```{r}
 ctry = data%>%
-        filter(probability==0)%>%
+        filter(probability==1)%>%
         group_by(rgn_nam)%>%
   summarise(numSPP = n())%>%
   ungroup()%>%
@@ -214,7 +217,7 @@ ctry = data%>%
 ggplot(ctry,aes(x = reorder(rgn_nam, numSPP), y=numSPP))+
   geom_bar(position="dodge",stat='identity',fill='lightblue',alpha=0.7,colour="black")+
    theme(axis.text.x=element_text(angle=45,hjust=1))+
-  labs(list(x = "Countries", y = "Number of Species (using 0 probability threshold)"))+
+  labs(list(x = "Countries", y = "Number of Species (using probability threshold of 1)"))+
   coord_flip()
 
 ```
