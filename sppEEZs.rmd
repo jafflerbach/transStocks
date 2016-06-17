@@ -70,8 +70,19 @@ cells_r = raster('spatial/loiczid_raster.gri')
 eezs_r  = raster('eezs.tif')
 plot(eezs_r,col=cols,main='OHI Regions',box=F,axes=F)
 
-rgns = read.csv('spatial/rgn_details.csv')%>%
+r = read.csv('spatial/rgn_details.csv')%>%
         rename(ohi_rgn = rgn_id)%>%select(ohi_rgn,rgn_typ,rgn_nam)
+
+#adding FAO areas to rgns. Read in csv that links SAUP to FAO to OHI regions. This was done in the
+#fisheries goal folder in ohiprep in ohi-science.
+rgns <- read.csv('spatial/ohi_saup_fao_rgns.csv',stringsAsFactors = F)%>%
+      right_join(r,by='ohi_rgn')%>%
+        select(ohi_rgn,fao_rgn,rgn_typ,rgn_nam)%>%
+        filter(ohi_rgn != 213)%>%
+        rbind(c('213','88','eez','Antarctica'),
+              c('213','48','eez','Antarctica'),
+              c('213','58','eez','Antarctica'))%>%
+          mutate(ohi_rgn = as.numeric(ohi_rgn))
 
 ```
 
@@ -178,7 +189,9 @@ fao_areas = read.csv('fao_areas.csv',stringsAsFactors=F)%>%
 
 data = df%>%
         left_join(fao_areas, by = c("rgn_nam" = "name"))%>%
-          rename(FAOarea = num)
+          rename(FAOarea = num)%>%
+        mutate(fao_num = ifelse(is.na(FAOarea),fao_rgn,FAOarea))%>%
+        select(-FAOarea,-fao_rgn)
 
 
 write.csv(data,'sp_prop_eezs.csv')
