@@ -1,0 +1,334 @@
+"","ohi_rgn","percent_saup","saup_id","saup_name","fao_rgn","prop_area"
+"1",82,1,8,"Albania",37,1
+"2",84,1,12,"Algeria",37,1
+"3",151,1,16,"American Samoa",77,1
+"4",200,1,24,"Angola",47,0.981253814
+"5",200,1,24,"Angola",34,0.018746186
+"6",120,1,28,"Antigua & Barbuda",31,1
+"7",172,1,32,"Argentina",41,1
+"8",16,1,36,"Australia",71,0.308424619
+"9",16,1,36,"Australia",81,0.116650313
+"10",16,1,36,"Australia",57,0.574925068
+"11",4,1,37,"Macquarie Isl. (Australia)",81,1
+"12",16,1,38,"Lord Howe Isl. (Australia)",81,1
+"13",110,1,44,"Bahamas",31,1
+"14",52,1,48,"Bahrain",51,1
+"15",204,1,50,"Bangladesh",57,1
+"16",124,1,52,"Barbados",31,1
+"17",59,1,56,"Belgium",27,1
+"18",108,1,60,"Bermuda (UK)",31,0.943778016
+"19",108,1,60,"Bermuda (UK)",21,0.056221984
+"20",232,1,70,"Bosnia & Herzegovina",37,1
+"21",105,1,74,"Bouvet Isl. (Norway)",48,1
+"22",171,1,76,"Brazil (mainland)",41,0.983235029
+"23",171,1,76,"Brazil (mainland)",31,0.016764971
+"24",171,1,77,"Trindade & Martim Vaz Isl. (Brazil)",41,1
+"25",164,1,84,"Belize",31,1
+"26",38,1,86,"Chagos Archipelago (UK)",51,1
+"27",7,1,90,"Solomon Isl.",71,1
+"28",117,1,92,"British Virgin Isl. (UK)",31,1
+"29",247,1,96,"Brunei Darussalam",71,1
+"30",71,1,100,"Bulgaria",37,1
+"31",205,1,104,"Myanmar",57,1
+"32",45,1,111,"Eritrea",51,1
+"33",24,1,116,"Cambodia",71,1
+"34",197,1,120,"Cameroon",34,1
+"35",56,1,132,"Cape Verde",34,1
+"36",113,1,136,"Cayman Isl. (UK)",31,1
+"37",40,1,144,"Sri Lanka",57,1
+"38",224,1,152,"Chile (mainland)",87,1
+"39",224,1,153,"Easter Isl. (Chile)",87,1
+"40",224,1,154,"Desventuradas Isl. (Chile)",87,1
+"41",224,1,155,"Juan Fernandez Islands (Chile)",87,1
+"42",14,1,157,"Taiwan",71,0.510099681
+"43",14,1,157,"Taiwan",61,0.489900319
+"44",2,1,162,"Christmas Isl. (Australia)",57,1
+"45",1,1,166,"Cocos (Keeling) Isl. (Australia)",57,1
+"46",28,1,174,"Comoros Isl.",51,1
+"47",29,1,175,"Mayotte (France)",51,1
+"48",100,1,178,"Congo, R. of",47,0.22152779
+"49",100,1,178,"Congo, R. of",34,0.77847221
+"50",199,1,180,"Congo (ex-Zaire)",47,0.886335771
+"51",199,1,180,"Congo (ex-Zaire)",34,0.113664229
+"52",153,1,184,"Cook Islands",77,1
+"53",187,1,191,"Croatia",37,1
+"54",112,1,192,"Cuba",31,1
+"55",81,1,197,"Cyprus (North)",37,1
+"56",81,1,198,"Cyprus (South)",37,1
+"57",99,1,204,"Benin",34,1
+"58",123,1,212,"Dominica",31,1
+"59",115,1,214,"Dominican Republic",31,1
+"60",137,1,218,"Ecuador (mainland)",87,1
+"61",137,1,219,"Galapagos Isl. (Ecuador)",87,1
+"62",134,1,222,"El Salvador",77,1
+"63",104,1,226,"Equatorial Guinea",34,1
+"64",70,1,233,"Estonia",27,1
+"65",141,1,234,"Faeroe Isl. (Denmark)",27,1
+"66",95,1,238,"Falkland Isl. (UK)",41,1
+"67",89,1,239,"South Georgia & Sandwich Isl. (UK)",48,1
+"68",18,1,242,"Fiji",71,1
+"69",174,1,246,"Finland",27,1
+"70",33,0.20107907,251,"Mozambique Channel Isl. (France)",51,1
+"71",34,0.3938209,251,"Mozambique Channel Isl. (France)",51,1
+"72",35,0.404710413,251,"Mozambique Channel Isl. (France)",51,1
+"73",36,1,252,"Tromelin Isl. (France)",51,1
+"74",169,1,254,"French Guiana",41,0.031271903
+"75",169,1,254,"French Guiana",31,0.968728097
+"76",147,1,258,"French Polynesia",81,0.153617153
+"77",147,1,258,"French Polynesia",77,0.846382847
+"78",46,1,262,"Djibouti",51,1
+"79",198,1,266,"Gabon",34,1
+"80",74,1,268,"Georgia",37,1
+"81",65,1,270,"Gambia",34,1
+"82",79,1,274,"Gaza Strip",37,1
+"83",176,1,277,"Germany (North Sea)",27,1
+"84",176,1,278,"Germany (Baltic Sea)",27,1
+"85",106,1,288,"Ghana",34,1
+"86",80,1,300,"Greece (without Crete)",37,1
+"87",145,1,304,"Greenland (Denmark)",18,0.119305887
+"88",145,1,304,"Greenland (Denmark)",27,0.633743487
+"89",145,1,304,"Greenland (Denmark)",21,0.246950625
+"90",125,1,308,"Grenada",31,1
+"91",140,1,312,"Guadeloupe  (France)",31,1
+"92",13,1,316,"Guam (USA)",71,1
+"93",194,1,324,"Guinea",37,1
+"94",167,1,328,"Guyana",31,1
+"95",114,1,332,"Haiti",31,1
+"96",94,1,334,"Heard & McDonald Isl. (Australia)",58,1
+"97",209,1,344,"Hong Kong (China)",61,1
+"98",143,1,352,"Iceland",27,1
+"99",203,1,356,"India (mainland)",51,0.617446736
+"100",203,1,356,"India (mainland)",57,0.382553264
+"101",26,1,357,"Andaman & Nicobar Isl. (India)",57,1
+"102",216,1,361,"Indonesia (Eastern)",71,0.834107202
+"103",216,1,361,"Indonesia (Eastern)",57,0.165892798
+"104",192,1,368,"Iraq",51,1
+"105",181,1,372,"Ireland",27,1
+"106",184,1,380,"Italy (mainland)",37,1
+"107",195,1,384,"Côte d'Ivoire",34,1
+"108",166,1,388,"Jamaica",31,1
+"109",210,1,390,"Japan (main islands)",61,1
+"110",210,1,393,"Japan (Daito Islands)",71,0.22226668
+"111",210,1,393,"Japan (Daito Islands)",61,0.77773332
+"112",159,1,396,"Johnston Atoll (USA)",77,1
+"113",215,1,400,"Jordan",51,1
+"114",43,1,404,"Kenya",51,1
+"115",21,1,408,"Korea (North)",61,1
+"116",20,1,410,"Korea (South)",61,1
+"117",51,1,414,"Kuwait",51,1
+"118",78,1,422,"Lebanon",37,1
+"119",69,1,428,"Latvia",27,1
+"120",97,1,430,"Liberia",34,1
+"121",67,1,434,"Libya",37,1
+"122",189,1,440,"Lithuania",27,1
+"123",42,1,450,"Madagascar",51,1
+"124",206,1,459,"Malaysia (Peninsula West)",71,0.10048233
+"125",206,1,459,"Malaysia (Peninsula West)",57,0.89951767
+"126",206,1,460,"Malaysia (Peninsula East)",71,1
+"127",206,1,461,"Malaysia (Sabah)",71,1
+"128",39,1,462,"Maldives",51,1
+"129",206,1,463,"Malaysia (Sarawak)",71,1
+"130",68,1,470,"Malta",37,1
+"131",140,1,474,"Martinique (France)",31,1
+"132",64,1,478,"Mauritania",34,1
+"133",37,1,480,"Mauritius",51,1
+"134",163,1,488,"Hawaii Northwest Islands (USA)",77,0.726042709
+"135",163,1,488,"Hawaii Northwest Islands (USA)",61,0.273957291
+"136",121,1,500,"Montserrat (UK)",31,1
+"137",41,1,508,"Mozambique",51,1
+"138",48,1,512,"Oman",51,1
+"139",101,1,516,"Namibia",47,1
+"140",10,1,520,"Nauru",71,1
+"141",177,1,528,"Netherlands",27,1
+"142",5,1,540,"New Caledonia (France)",71,0.895795496
+"143",5,1,540,"New Caledonia (France)",81,0.104204504
+"144",6,1,548,"Vanuatu",71,0.970033676
+"145",6,1,548,"Vanuatu",81,0.029966324
+"146",162,1,554,"New Zealand",81,1
+"147",162,1,555,"Kermadec Isl. (New Zealand)",81,1
+"148",196,1,566,"Nigeria",34,1
+"149",154,1,570,"Niue (New Zealand)",77,1
+"150",3,1,574,"Norfolk Isl. (Australia)",81,1
+"151",223,1,578,"Norway",27,1
+"152",144,1,579,"Jan Mayen Isl. (Norway)",27,1
+"153",13,1,580,"Northern Marianas (USA)",71,0.68720611
+"154",13,1,580,"Northern Marianas (USA)",61,0.31279389
+"155",9,1,583,"Micronesia (Federated States of)",71,1
+"156",11,1,584,"Marshall Isl.",71,1
+"157",8,1,585,"Palau",71,1
+"158",53,1,586,"Pakistan",51,1
+"159",17,1,598,"Papua New Guinea",71,1
+"160",138,1,604,"Peru",87,1
+"161",15,1,608,"Philippines",71,0.958684095
+"162",15,1,608,"Philippines",61,0.041315905
+"163",146,1,612,"Pitcairn (UK)",81,0.443219625
+"164",146,1,612,"Pitcairn (UK)",77,0.556780375
+"165",178,1,616,"Poland",27,1
+"166",183,1,620,"Portugal (mainland)",34,0.139926979
+"167",183,1,620,"Portugal (mainland)",27,0.860073021
+"168",57,1,621,"Madeira Isl. (Portugal)",34,0.965931246
+"169",57,1,621,"Madeira Isl. (Portugal)",27,0.034068754
+"170",55,1,622,"Azores Isl. (Portugal)",34,0.161843851
+"171",55,1,622,"Azores Isl. (Portugal)",27,0.838156149
+"172",193,1,624,"Guinea-Bissau",34,1
+"173",231,0.942583435,626,"Timor Leste",57,1
+"174",237,0.057416565,626,"Timor Leste",57,1
+"175",116,1,630,"Puerto Rico (USA)",31,1
+"176",190,1,634,"Qatar",51,1
+"177",32,1,638,"Réunion (France)",51,1
+"178",72,1,642,"Romania",37,1
+"179",73,1,645,"Russia (Barents Sea)",27,1
+"180",73,1,647,"Russia (Black Sea)",37,1
+"181",73,1,648,"Russia (Baltic Sea)",27,1
+"182",73,1,649,"Russia (Far East)",61,1
+"183",86,1,654,"Saint Helena (UK)",47,1
+"184",119,1,659,"Saint Kitts & Nevis",31,1
+"185",118,1,660,"Anguilla (UK)",31,1
+"186",122,1,662,"Saint Lucia",31,1
+"187",219,1,666,"Saint Pierre & Miquelon (France)",21,1
+"188",127,1,670,"Saint Vincent & the Grenadines",31,1
+"189",103,1,678,"Sao Tome & Principe",34,1
+"190",50,1,683,"Saudi Arabia (Red Sea)",51,1
+"191",50,1,684,"Saudi Arabia (Persian Gulf)",51,1
+"192",66,1,686,"Senegal",34,1
+"193",31,1,690,"Seychelles",51,1
+"194",96,1,694,"Sierra Leone",34,1
+"195",208,1,702,"Singapore",71,1
+"196",207,1,704,"Viet Nam",71,0.760471596
+"197",207,1,704,"Viet Nam",61,0.239528404
+"198",188,1,705,"Slovenia",37,1
+"199",44,1,706,"Somalia",51,1
+"200",90,1,711,"Prince Edward Isl. (South Africa)",51,0.183977842
+"201",90,1,711,"Prince Edward Isl. (South Africa)",58,0.816022158
+"202",58,1,723,"Canary Isl. (Spain)",34,1
+"203",49,1,736,"Sudan",51,1
+"204",168,1,740,"Suriname",31,1
+"205",223,1,744,"Svalbard Isl. (Norway)",27,1
+"206",77,1,760,"Syria",37,1
+"207",98,1,768,"Togo",34,1
+"208",156,1,772,"Tokelau (New Zealand)",71,0.075224924
+"209",156,1,772,"Tokelau (New Zealand)",77,0.924775076
+"210",155,1,776,"Tonga",71,0.423361884
+"211",155,1,776,"Tonga",81,0.034344365
+"212",155,1,776,"Tonga",77,0.542293751
+"213",126,1,780,"Trinidad & Tobago",31,1
+"214",54,1,784,"United Arab Emirates",51,1
+"215",61,1,788,"Tunisia",37,1
+"216",76,1,793,"Turkey (Mediterranean Sea)",37,1
+"217",76,1,794,"Turkey (Black Sea)",37,1
+"218",111,1,796,"Turks & Caicos Isl. (UK)",31,1
+"219",19,1,798,"Tuvalu",71,1
+"220",75,1,804,"Ukraine",37,1
+"221",180,1,826,"United Kingdom (UK)",27,1
+"222",227,0.251798561,830,"Channel Isl. (UK)",27,1
+"223",228,0.742655875,830,"Channel Isl. (UK)",27,1
+"224",202,1,834,"Tanzania",51,1
+"225",163,1,842,"Hawaii Main Islands (USA)",77,1
+"226",150,1,844,"Palmyra Atoll & Kingman Reef (USA)",77,1
+"227",149,1,845,"Jarvis Isl. (USA)",77,1
+"228",158,1,846,"Howland & Baker Isl. (USA)",71,0.813593568
+"229",158,1,846,"Howland & Baker Isl. (USA)",77,0.186406432
+"230",163,1,848,"USA (West Coast)",67,0.409205531
+"231",163,1,848,"USA (West Coast)",77,0.590794469
+"232",116,1,850,"US Virgin Isl.",31,1
+"233",163,1,851,"USA (East Coast)",31,0.449935417
+"234",163,1,851,"USA (East Coast)",21,0.550064583
+"235",163,1,852,"USA (Gulf of Mexico)",31,1
+"236",85,1,855,"Ascension Isl. (UK)",47,0.846217987
+"237",85,1,855,"Ascension Isl. (UK)",34,0.153782013
+"238",88,1,856,"Tristan da Cunha Isl. (UK)",47,1
+"239",173,1,858,"Uruguay",41,1
+"240",139,1,862,"Venezuela",31,1
+"241",12,1,872,"Wake Isl. (USA)",71,0.60741467
+"242",12,1,872,"Wake Isl. (USA)",61,0.39258533
+"243",161,1,876,"Wallis & Futuna Isl. (France)",71,0.900623452
+"244",161,1,876,"Wallis & Futuna Isl. (France)",77,0.099376548
+"245",152,1,882,"Samoa",77,1
+"246",186,1,891,"Montenegro",37,1
+"247",92,1,895,"St Paul & Amsterdam Isl. (France)",51,0.836987489
+"248",92,1,895,"St Paul & Amsterdam Isl. (France)",57,0.163012511
+"249",91,1,896,"Crozet Isl. (France)",51,0.272087557
+"250",91,1,896,"Crozet Isl. (France)",58,0.727912443
+"251",93,1,897,"Kerguelen Isl. (France)",58,1
+"252",107,1,898,"Clipperton Isl.  (France)",77,1
+"253",179,1,899,"Corsica (France)",37,1
+"254",80,1,900,"Crete (Greece)",37,1
+"255",184,1,901,"Sicily (Italy)",37,1
+"256",184,1,902,"Sardinia (Italy)",37,1
+"257",182,1,903,"Balearic Island (Spain)",37,1
+"258",221,1,904,"St Barthelemy (France)",31,1
+"259",221,1,905,"St Martin (France)",31,1
+"260",244,1,906,"Curacao (Netherlands)",31,1
+"261",245,1,907,"Bonaire (Netherlands)",31,1
+"262",248,0.807692308,908,"Saba and Sint Eustaius (Netherlands)",31,1
+"263",249,0.184615385,908,"Saba and Sint Eustaius (Netherlands)",31,1
+"264",220,1,909,"Sint Maarten (Netherlands)",31,1
+"265",48,1,911,"Oman (Musandam)",51,1
+"266",73,1,912,"Russia (Kara Sea)",18,1
+"267",73,1,913,"Russia (Laptev to Chukchi Sea)",18,1
+"268",222,1,914,"Sweden (Baltic)",27,1
+"269",222,1,915,"Sweden (West Coast)",27,1
+"270",47,1,916,"Yemen (Red Sea)",51,1
+"271",47,1,917,"Yemen (Arabian Sea)",51,1
+"272",179,0.993551271,918,"France (Mediterranean)",37,1
+"273",185,0.006448729,918,"France (Mediterranean)",37,1
+"274",179,1,919,"France (Atlantic Coast)",27,1
+"275",133,1,920,"Honduras (Pacific)",77,1
+"276",133,1,921,"Honduras (Caribbean)",31,1
+"277",191,1,922,"Iran (Persian Gulf)",51,1
+"278",191,1,923,"Iran (Sea of Oman)",51,1
+"279",218,1,924,"Canada (Arctic)",18,1
+"280",218,1,925,"Canada (Pacific)",67,1
+"281",218,1,926,"Canada (East Coast)",21,1
+"282",132,1,927,"Colombia (Caribbean)",31,1
+"283",132,1,928,"Colombia (Pacific)",87,1
+"284",130,1,929,"Costa Rica (Caribbean)",31,1
+"285",130,1,930,"Costa Rica (Pacific)",77,0.713125641
+"286",130,1,930,"Costa Rica (Pacific)",87,0.286874359
+"287",175,1,931,"Denmark (Baltic Sea)",27,1
+"288",175,1,932,"Denmark (North Sea)",27,1
+"289",214,1,933,"Egypt (Mediterranean)",37,1
+"290",214,1,934,"Egypt (Red Sea)",51,1
+"291",136,1,935,"Guatemala (Caribbean)",31,1
+"292",136,1,936,"Guatemala (Pacific)",77,1
+"293",216,1,937,"Indonesia (Central)",71,1
+"294",216,1,938,"Indonesia (Indian Ocean)",71,0.015068153
+"295",216,1,938,"Indonesia (Indian Ocean)",57,0.984931847
+"296",79,1,939,"Israel (Mediterranean)",37,1
+"297",79,1,940,"Israel (Red Sea)",51,1
+"298",212,1,941,"Kiribati (Gilbert Islands)",71,1
+"299",148,1,942,"Kiribati (Line Islands)",77,1
+"300",157,1,943,"Kiribati (Phoenix Islands)",71,0.220398017
+"301",157,1,943,"Kiribati (Phoenix Islands)",77,0.779601983
+"302",135,1,944,"Mexico (Atlantic)",31,1
+"303",135,1,945,"Mexico (Pacific)",77,1
+"304",62,1,946,"Morocco (Central)",34,1
+"305",62,1,947,"Morocco (Mediterranean)",37,1
+"306",63,1,948,"Morocco (South)",34,1
+"307",131,1,949,"Nicaragua (Caribbean)",31,1
+"308",131,1,950,"Nicaragua (Pacific)",77,1
+"309",129,1,951,"Panama (Caribbean)",31,1
+"310",129,1,952,"Panama (Pacific)",77,1
+"311",102,1,953,"South Africa (Atlantic Coast)",47,1
+"312",102,1,954,"South Africa (Indian Ocean Coast)",51,0.447622215
+"313",102,1,954,"South Africa (Indian Ocean Coast)",47,0.552377785
+"314",25,1,956,"Thailand (Andaman Sea)",57,1
+"315",25,1,957,"Thailand (Gulf of Thailand)",71,1
+"316",163,1,958,"USA (Alaska, Arctic)",18,1
+"317",163,1,959,"USA (Alaska, Subarctic)",67,0.861832329
+"318",163,1,959,"USA (Alaska, Subarctic)",61,0.138167671
+"319",60,0.004205981,962,"Spain (mainland, Med and Gulf of Cadiz)",34,0.014816465
+"320",60,0.004205981,962,"Spain (mainland, Med and Gulf of Cadiz)",27,0.084911992
+"321",60,0.004205981,962,"Spain (mainland, Med and Gulf of Cadiz)",37,0.900271544
+"322",182,0.995794019,962,"Spain (mainland, Med and Gulf of Cadiz)",34,0.014816465
+"323",182,0.995794019,962,"Spain (mainland, Med and Gulf of Cadiz)",27,0.084911992
+"324",182,0.995794019,962,"Spain (mainland, Med and Gulf of Cadiz)",37,0.900271544
+"325",182,1,963,"Spain (Northwest)",27,1
+"326",76,1,966,"Turkey (Marmara Sea)",37,1
+"327",250,1,967,"Aruba (Netherlands)",31,1
+"328",54,1,968,"United Arab Emirates (Fujairah)",51,1
+"329",171,1,969,"Fernando de Noronha (Brazil)",41,1
+"330",171,1,970,"St Paul and St. Peter Archipelago (Brazil)",41,0.567997422
+"331",171,1,970,"St Paul and St. Peter Archipelago (Brazil)",34,0.432002578
+"332",210,1,971,"Japan (Ogasawara Islands)",61,1
+"333",30,1,972,"Glorieuse Islands (France)",51,1
